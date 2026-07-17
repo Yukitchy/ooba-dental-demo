@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>【デモ】おおば歯科クリニック｜坂戸市の歯科・歯医者</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --ink:#2c3634;
+  --ink-soft:#4e5d5a;
+  --sage:#6f9490;
+  --sage-deep:#3e5c58;
+  --sage-pale:#e8efed;
+  --cream:#faf8f4;
+  --white:#ffffff;
+  --gold:#b9975b;
+  --line:#dde5e2;
+  --radius:14px;
+  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+  --sans:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+  --en:"Cormorant Garamond",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.9;font-size:15px;letter-spacing:.02em}
+img{max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+
+/* ===== demo ribbon ===== */
+.demo-ribbon{background:var(--ink);color:#fff;text-align:center;font-size:11px;letter-spacing:.15em;padding:6px 12px}
+.demo-ribbon strong{color:#f0c987}
+
+/* ===== header ===== */
+header{position:sticky;top:0;z-index:1000;background:rgba(250,248,244,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px;padding:14px 24px}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand svg{width:34px;height:34px}
+.brand-txt small{display:block;font-size:10px;color:var(--ink-soft);letter-spacing:.1em}
+.brand-txt b{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:.06em}
+nav.gnav{margin-left:auto}
+nav.gnav ul{display:flex;gap:26px}
+nav.gnav a{font-size:13.5px;font-weight:500;position:relative;padding:4px 0}
+nav.gnav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--sage);transition:width .3s}
+nav.gnav a:hover::after{width:100%}
+.head-cta{display:flex;gap:10px;align-items:center}
+.tel-head{font-family:var(--en);font-size:20px;font-weight:500;color:var(--sage-deep);white-space:nowrap}
+.tel-head span{font-family:var(--sans);font-size:10px;display:block;line-height:1.2;color:var(--ink-soft);letter-spacing:.1em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;padding:12px 26px;border-radius:999px;transition:all .25s;cursor:pointer;border:none;letter-spacing:.06em}
+.btn-primary{background:var(--sage-deep);color:#fff;box-shadow:0 4px 14px rgba(62,92,88,.28)}
+.btn-primary:hover{background:var(--sage);transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--sage-deep);border:1.5px solid var(--sage)}
+.btn-ghost:hover{background:var(--sage-pale)}
+.btn-sm{padding:9px 18px;font-size:13px}
+
+/* ===== hero ===== */
+.hero{position:relative;overflow:hidden;background:
+  radial-gradient(ellipse 80% 60% at 85% 20%,rgba(111,148,144,.16),transparent),
+  radial-gradient(ellipse 60% 50% at 10% 90%,rgba(185,151,91,.08),transparent),
+  linear-gradient(160deg,#fdfcfa 0%,#eef3f1 100%)}
+.hero-inner{max-width:1200px;margin:0 auto;padding:96px 24px 110px;position:relative}
+.hero-copy .en-over{font-family:var(--en);font-size:15px;letter-spacing:.35em;color:var(--sage);text-transform:uppercase;margin-bottom:18px}
+h1.hero-title{font-family:var(--serif);font-size:clamp(30px,4.6vw,52px);font-weight:600;line-height:1.55;letter-spacing:.04em}
+h1.hero-title .kw{position:relative;padding:0 2px}
+h1.hero-title .kw::after{content:"";position:absolute;left:0;bottom:6px;width:100%;height:10px;background:rgba(111,148,144,.25);z-index:-1}
+.hero-sub{font-family:var(--serif);font-size:clamp(16px,2vw,21px);color:var(--sage-deep);margin-top:16px;letter-spacing:.08em}
+.hero-lead{margin-top:22px;color:var(--ink-soft);max-width:520px}
+.hero-actions{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+.hero-badges{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap}
+.hero-badges li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:12px;color:var(--sage-deep);font-weight:500;display:flex;align-items:center;gap:6px}
+.hero-badges li::before{content:"✓";color:var(--gold);font-weight:700}
+.hero-photo{position:absolute;right:0;top:0;height:100%;width:62%;object-fit:cover;object-position:center;z-index:0}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#fdfcfa 0%,#fdfcfa 36%,rgba(253,252,250,.86) 52%,rgba(253,252,250,0) 78%);z-index:1;pointer-events:none}
+.hero-inner{z-index:2}
+.hero-watermark{position:absolute;bottom:-14px;left:0;font-family:var(--en);font-size:clamp(60px,9vw,120px);color:rgba(111,148,144,.1);letter-spacing:.06em;white-space:nowrap;font-weight:500;line-height:1;z-index:2}
+.status-chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:600;margin-bottom:22px}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#4caf7d;box-shadow:0 0 0 4px rgba(76,175,125,.18)}
+.status-chip.closed .status-dot{background:#c66;box-shadow:0 0 0 4px rgba(204,102,102,.15)}
+
+/* ===== sections common ===== */
+section{padding:88px 0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.sec-head{text-align:center;margin-bottom:52px}
+.sec-head .en{font-family:var(--en);font-size:14px;letter-spacing:.35em;color:var(--gold);text-transform:uppercase}
+.sec-head h2{font-family:var(--serif);font-size:clamp(24px,3.2vw,34px);font-weight:600;margin-top:8px;letter-spacing:.06em}
+.sec-head p.sub{color:var(--ink-soft);margin-top:14px;font-size:14px}
+
+/* ===== symptom nav ===== */
+.symptom{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:56px 0}
+.symptom-chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.symptom-chips a{background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:11px 22px;font-size:13.5px;font-weight:500;transition:all .25s;display:flex;gap:8px;align-items:center}
+.symptom-chips a:hover{background:var(--sage-pale);border-color:var(--sage);transform:translateY(-2px)}
+.symptom-chips .emo{font-size:16px}
+
+/* ===== menu grid ===== */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+@media(min-width:1060px){.menu-grid{grid-template-columns:repeat(5,1fr)}}
+.menu-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px 20px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.menu-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(62,92,88,.12);border-color:var(--sage)}
+.menu-card .icon{width:52px;height:52px;margin:0 auto 14px;background:var(--sage-pale);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.menu-card .icon svg{width:26px;height:26px;stroke:var(--sage-deep)}
+.menu-card h3{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.04em}
+.menu-card p{font-size:12px;color:var(--ink-soft);margin-top:8px;line-height:1.7}
+
+/* ===== features ===== */
+.features{background:linear-gradient(180deg,var(--white),var(--cream))}
+.feature-list{display:flex;flex-direction:column;gap:22px}
+.feature{display:grid;grid-template-columns:110px 1fr;gap:26px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:32px 36px;align-items:center;transition:box-shadow .3s}
+.feature:hover{box-shadow:0 10px 30px rgba(62,92,88,.1)}
+.feature-num{font-family:var(--en);font-size:54px;color:var(--sage);line-height:1;text-align:center;font-weight:500}
+.feature-num small{display:block;font-size:11px;letter-spacing:.3em;color:var(--gold);font-family:var(--sans);margin-bottom:4px}
+.feature h3{font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:8px;letter-spacing:.04em}
+.feature p{font-size:13.5px;color:var(--ink-soft)}
+
+/* ===== booking ===== */
+.booking{background:var(--sage-deep);color:#fff;position:relative;overflow:hidden}
+.booking::before{content:"RESERVATION";position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:var(--en);font-size:clamp(50px,8vw,100px);color:rgba(255,255,255,.05);letter-spacing:.1em;font-weight:500;white-space:nowrap}
+.booking .sec-head .en{color:#e3c98f}
+.booking .sec-head h2{color:#fff}
+.booking .sec-head p.sub{color:rgba(255,255,255,.75)}
+.wizard{background:#fff;color:var(--ink);border-radius:20px;max-width:820px;margin:0 auto;padding:36px;box-shadow:0 24px 60px rgba(0,0,0,.25);position:relative}
+.steps{display:flex;justify-content:center;gap:0;margin-bottom:30px}
+.step{display:flex;align-items:center;gap:8px;font-size:12px;color:#9aa8a5;font-weight:600}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--sage-pale);color:var(--sage-deep);display:flex;align-items:center;justify-content:center;font-family:var(--en);font-size:14px}
+.step.active{color:var(--sage-deep)}
+.step.active .n{background:var(--sage-deep);color:#fff}
+.step.done .n{background:var(--gold);color:#fff}
+.step-bar{width:44px;height:1.5px;background:var(--line);margin:0 10px}
+.pane{display:none}
+.pane.show{display:block;animation:fadeIn .35s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.choice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.choice{border:1.5px solid var(--line);border-radius:10px;padding:14px 12px;text-align:center;cursor:pointer;font-size:13.5px;font-weight:500;transition:all .2s;background:#fff}
+.choice:hover{border-color:var(--sage)}
+.choice.sel{border-color:var(--sage-deep);background:var(--sage-pale);font-weight:700}
+.visit-type{display:flex;gap:10px;margin-bottom:18px}
+.visit-type .choice{flex:1;padding:12px}
+.pane h4{font-family:var(--serif);font-size:16px;margin:20px 0 12px;font-weight:600}
+.pane h4:first-child{margin-top:0}
+.date-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+.date-cell{min-width:64px;border:1.5px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;flex-shrink:0}
+.date-cell:hover{border-color:var(--sage)}
+.date-cell.sel{border-color:var(--sage-deep);background:var(--sage-pale)}
+.date-cell.off{opacity:.35;cursor:not-allowed;background:var(--cream)}
+.date-cell .dow{font-size:10.5px;color:var(--ink-soft)}
+.date-cell .dd{font-family:var(--en);font-size:20px;line-height:1.2;font-weight:500}
+.date-cell .mm{font-size:10px;color:var(--ink-soft)}
+.date-cell.sat .dow{color:#4a7ab5}.date-cell.sun .dow{color:#c66}
+.slot-groups{margin-top:14px}
+.slot-label{font-size:12px;color:var(--ink-soft);font-weight:600;margin:12px 0 6px}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.slot{border:1.5px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center;font-family:var(--en);font-size:14.5px;cursor:pointer;transition:all .2s;background:#fff}
+.slot:hover{border-color:var(--sage)}
+.slot.sel{border-color:var(--sage-deep);background:var(--sage-deep);color:#fff}
+.slot.full{opacity:.3;cursor:not-allowed;text-decoration:line-through;background:var(--cream)}
+.slot-empty{font-size:13px;color:var(--ink-soft);padding:12px 0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .full{grid-column:1/-1}
+.field label{font-size:12.5px;font-weight:600;display:block;margin-bottom:5px}
+.field label .req{color:#c66;font-size:10px;margin-left:6px;border:1px solid #c66;border-radius:4px;padding:0 4px}
+.field input,.field textarea,.field select{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;font-family:var(--sans);font-size:14px;background:#fff;color:var(--ink)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--sage)}
+.field .err{font-size:11px;color:#c66;margin-top:3px;display:none}
+.field.invalid input{border-color:#c66}
+.field.invalid .err{display:block}
+.wiz-nav{display:flex;justify-content:space-between;margin-top:26px;gap:12px}
+.summary-box{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+.summary-box dl{display:grid;grid-template-columns:96px 1fr;row-gap:8px;font-size:14px}
+.summary-box dt{color:var(--ink-soft);font-size:12.5px;padding-top:2px}
+.summary-box dd{font-weight:600}
+.done-view{text-align:center;padding:20px 0}
+.done-view .big{font-size:52px;line-height:1}
+.done-view h3{font-family:var(--serif);font-size:22px;margin:14px 0 6px}
+.done-view .rsv-no{font-family:var(--en);font-size:26px;color:var(--sage-deep);letter-spacing:.1em;background:var(--sage-pale);display:inline-block;padding:6px 22px;border-radius:8px;margin:10px 0}
+.done-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.mybookings{max-width:820px;margin:22px auto 0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 24px;font-size:13px}
+.mybookings h4{font-size:13px;letter-spacing:.1em;color:#e3c98f;margin-bottom:8px}
+.mybookings ul li{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.15);gap:10px;flex-wrap:wrap}
+.mybookings .cancel{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:3px 12px;font-size:11px;cursor:pointer}
+.mybookings .cancel:hover{background:rgba(255,255,255,.15)}
+
+/* ===== doctors ===== */
+.doctor-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:820px;margin:0 auto}
+.doctor{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:34px;text-align:center}
+.doctor .avatar-img{width:150px;height:150px;border-radius:50%;object-fit:cover;object-position:center top;margin:0 auto 18px;display:block;border:4px solid var(--sage-pale)}
+.staff-photo{display:block;max-width:820px;width:100%;margin:0 auto 28px;border-radius:var(--radius);box-shadow:0 14px 40px rgba(62,92,88,.15)}
+.doctor .role{font-size:11.5px;letter-spacing:.25em;color:var(--gold);font-weight:600}
+.doctor h3{font-family:var(--serif);font-size:21px;font-weight:600;margin:6px 0 12px}
+.doctor p{font-size:13px;color:var(--ink-soft);text-align:left}
+
+/* ===== info / access ===== */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.hours-card,.access-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px}
+.hours-card h3,.access-card h3{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+table.hours{width:100%;border-collapse:collapse;font-size:13px;text-align:center}
+table.hours th,table.hours td{border:1px solid var(--line);padding:9px 4px}
+table.hours thead th{background:var(--sage-pale);font-weight:600;font-size:12.5px}
+table.hours .time{font-family:var(--en);font-size:13.5px;white-space:nowrap}
+table.hours td.on{color:var(--sage-deep);font-weight:700}
+table.hours td.off{color:#bbb}
+table.hours .today{background:#fdf6e8}
+.hours-note{font-size:11.5px;color:var(--ink-soft);margin-top:10px}
+.access-card dl{font-size:13.5px;display:grid;grid-template-columns:70px 1fr;row-gap:12px}
+.access-card dt{color:var(--gold);font-weight:600;font-size:12px;letter-spacing:.1em;padding-top:2px}
+#map{height:280px;border-radius:12px;margin-top:18px;border:1px solid var(--line);z-index:1}
+
+/* ===== news / faq ===== */
+.news-list{max-width:760px;margin:0 auto}
+.news-list li{display:flex;gap:22px;padding:16px 6px;border-bottom:1px solid var(--line);font-size:14px;align-items:baseline}
+.news-list time{font-family:var(--en);color:var(--sage);font-size:14px;white-space:nowrap}
+.news-list .tag{font-size:10.5px;background:var(--sage-pale);color:var(--sage-deep);border-radius:4px;padding:2px 8px;white-space:nowrap}
+.faq-list{max-width:760px;margin:0 auto}
+.faq{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.faq summary{padding:18px 22px;cursor:pointer;font-weight:600;font-size:14.5px;display:flex;gap:14px;align-items:center;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .q{font-family:var(--en);color:var(--gold);font-size:18px}
+.faq summary::after{content:"+";margin-left:auto;font-family:var(--en);font-size:22px;color:var(--sage);transition:transform .25s}
+.faq[open] summary::after{transform:rotate(45deg)}
+.faq .a{padding:0 22px 18px 54px;font-size:13.5px;color:var(--ink-soft)}
+
+/* ===== footer ===== */
+footer{background:var(--ink);color:#cfd8d5;padding:60px 0 90px;font-size:13px}
+.foot-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:40px}
+.foot-brand b{font-family:var(--serif);font-size:19px;color:#fff;display:block;margin-bottom:12px}
+.foot-grid h4{color:#e3c98f;font-size:12px;letter-spacing:.2em;margin-bottom:14px}
+.foot-grid ul li{margin-bottom:8px}
+.foot-grid a:hover{color:#fff;text-decoration:underline}
+.copyright{text-align:center;margin-top:46px;font-size:11px;color:#8a9995}
+
+/* ===== mobile bar ===== */
+.mobile-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:1100;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+.mobile-bar a{flex:1;text-align:center;padding:13px 4px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+.mobile-bar .m-tel{color:var(--sage-deep)}
+.mobile-bar .m-rsv{background:var(--sage-deep);color:#fff}
+
+/* ===== reveal ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== responsive ===== */
+@media(max-width:960px){
+  nav.gnav{display:none}
+  .hero-photo{width:100%}
+  .hero::after{background:linear-gradient(90deg,rgba(253,252,250,.96) 0%,rgba(253,252,250,.9) 60%,rgba(253,252,250,.75) 100%)}
+  .info-grid,.doctor-grid{grid-template-columns:1fr}
+  .feature{grid-template-columns:70px 1fr;padding:24px;gap:18px}
+  .feature-num{font-size:38px}
+}
+@media(max-width:640px){
+  .tel-head{display:none}
+  .head-cta .btn-ghost{display:none}
+  .mobile-bar{display:flex}
+  body{padding-bottom:54px}
+  section{padding:64px 0}
+  .wizard{padding:24px 18px}
+  .form-grid{grid-template-columns:1fr}
+  .step .lbl{display:none}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-ribbon">【<strong>DEMO</strong>】このページはデザイン提案用のサンプルです。実在の「おおば歯科クリニック」公式サイトではありません — 実際の情報は <u>ooba-dental.com</u> をご覧ください</div>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 40 40" fill="none"><path d="M20 4c-4 0-5.5 2.5-9 2.5C7 6.5 4.5 10 4.5 14c0 7 4 10 5.5 16 .8 3.2 1.6 6 3.7 6 2.4 0 2-4.5 3.1-8.4.6-2.1 1.7-3.4 3.2-3.4s2.6 1.3 3.2 3.4c1.1 3.9.7 8.4 3.1 8.4 2.1 0 2.9-2.8 3.7-6 1.5-6 5.5-9 5.5-16 0-4-2.5-7.5-6.5-7.5-3.5 0-5-2.5-9-2.5z" stroke="#3e5c58" stroke-width="2.4" fill="#e8efed"/></svg>
+      <span class="brand-txt"><small>坂戸市の歯医者【デモ】</small><b>おおば歯科クリニック</b></span>
+    </a>
+    <nav class="gnav">
+      <ul>
+        <li><a href="#menu">診療案内</a></li>
+        <li><a href="#features">当院のこだわり</a></li>
+        <li><a href="#doctor">スタッフ紹介</a></li>
+        <li><a href="#clinic">医院情報</a></li>
+        <li><a href="#faq">よくある質問</a></li>
+      </ul>
+    </nav>
+    <div class="head-cta">
+      <a class="tel-head" href="tel:0492817880"><span>お電話でのご予約</span>049-281-7880</a>
+      <a class="btn btn-primary btn-sm" href="#booking">Web予約</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-photo" src="img/img_main.jpg" alt="マイクロスコープによる精密治療を行う歯科医師">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="status-chip" id="openChip"><span class="status-dot"></span><span id="openTxt">診療状況を確認中…</span></div>
+      <p class="en-over">Ooba Dental Clinic</p>
+      <h1 class="hero-title">「<span class="kw">CURE</span>」から「<span class="kw">CARE</span>」へ<br>——治すから、守る時代へ</h1>
+      <p class="hero-sub">再発を防ぐ精密な歯科治療と、徹底的な予防ケアを坂戸で。</p>
+      <p class="hero-lead">マイクロスコープを用いた精密治療と、痛くなる前に通える予防メンテナンス。あなたの歯を、生涯にわたって守り続けるかかりつけ医を目指します。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#booking">📅 24時間Web予約</a>
+        <a class="btn btn-ghost" href="tel:0492817880">📞 049-281-7880</a>
+      </div>
+      <ul class="hero-badges">
+        <li>マイクロスコープ精密治療</li>
+        <li>歯科用CT・3Dスキャナー</li>
+        <li>口腔管理体制強化加算 認定</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-watermark">OOBA DENTAL CLINIC</div>
+</div>
+
+<!-- SYMPTOM NAV -->
+<div class="symptom">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:28px">
+      <p class="en">Find by Symptom</p>
+      <h2>症状・お悩みから探す</h2>
+    </div>
+    <div class="symptom-chips">
+      <a href="#menu"><span class="emo">🦷</span>歯が痛い・しみる</a>
+      <a href="#menu"><span class="emo">🩸</span>歯ぐきから血が出る</a>
+      <a href="#menu"><span class="emo">👶</span>子どもの歯が心配</a>
+      <a href="#menu"><span class="emo">✨</span>歯を白くしたい</a>
+      <a href="#menu"><span class="emo">😬</span>歯並びが気になる</a>
+      <a href="#menu"><span class="emo">🦴</span>歯を失ってしまった</a>
+      <a href="#menu"><span class="emo">🛡️</span>予防・クリーニング</a>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">Medical Menu</p>
+      <h2>診療案内</h2>
+      <p class="sub">むし歯治療から予防・矯正・インプラントまで、お口のことはすべて当院で完結できます。</p>
+    </div>
+    <div class="menu-grid reveal">
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3c-2 0-2.8 1.2-4.5 1.2C5.5 4.2 4 6 4 8c0 3.5 2 5 2.8 8 .4 1.6.8 3 1.8 3 1.2 0 1-2.2 1.6-4.2.3-1 .9-1.7 1.8-1.7s1.5.7 1.8 1.7c.6 2 .4 4.2 1.6 4.2 1 0 1.4-1.4 1.8-3C18 13 20 11.5 20 8c0-2-1.5-3.8-3.5-3.8C14.8 4.2 14 3 12 3z"/></svg></div><h3>一般歯科</h3><p>なるべく削らない治療</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 14c2-1.5 4-1.5 6 0s4 1.5 6 0 3-1 4 0M4 18c2-1.5 4-1.5 6 0s4 1.5 6 0 3-1 4 0M8 10V5a4 4 0 018 0v5"/></svg></div><h3>歯周病治療</h3><p>原因から断つケア</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>予防歯科</h3><p>痛くなる前に通う</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="5" y="9" width="14" height="10" rx="2"/><path d="M8 9V6a4 4 0 018 0v3M12 13v3"/></svg></div><h3>詰め物・被せ物</h3><p>精密で再発しにくい補綴</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M9 3h6v5l-1.5 2h-3L9 8V3zM10.5 10v7m3-7v7M10 17h4l-1 4h-2l-1-4z"/></svg></div><h3>インプラント</h3><p>第二の永久歯</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 12c0-3 3.5-6 8-6s8 3 8 6-3.5 6-8 6-8-3-8-6z"/><path d="M8 10v4m4-5v6m4-5v4"/></svg></div><h3>入れ歯・ブリッジ</h3><p>噛める喜びを取り戻す</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.5 2.5-6 6-6s6 2.5 6 6"/></svg></div><h3>小児歯科</h3><p>歯医者ぎらいにさせない</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 10c2.5-2 5-2 8 0s5.5 2 8 0M4 10v4m8-2v4m8-6v4"/><rect x="3" y="15" width="18" height="4" rx="2"/></svg></div><h3>矯正歯科</h3><p>マウスピース矯正対応</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3zM18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15z"/></svg></div><h3>ホワイトニング</h3><p>透明感のある白い歯へ</p></div>
+      <div class="menu-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M7 4h10l3 5-8 11L4 9l3-5z"/><path d="M4 9h16M9.5 9L12 20l2.5-11"/></svg></div><h3>セラミック治療</h3><p>金属を使わない美しさ</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">Features</p>
+      <h2>当院のこだわり</h2>
+    </div>
+    <div class="feature-list">
+      <div class="feature reveal"><div class="feature-num"><small>POINT</small>01</div><div><h3>痛くなる前に受診 — 予防ファースト</h3><p>むし歯や歯周病は初期段階ではほとんど自覚症状がありません。定期的な受診による早期発見・早期治療こそが、歯を長く健康に保ち、結果的に治療費も抑える賢い選択です。</p></div></div>
+      <div class="feature reveal"><div class="feature-num"><small>POINT</small>02</div><div><h3>マイクロスコープ・拡大鏡による精密治療</h3><p>肉眼の最大20倍まで拡大できるマイクロスコープを活用。精密に治療することで削る量を最小限に抑え、再発しにくい治療を実現します。</p></div></div>
+      <div class="feature reveal"><div class="feature-num"><small>POINT</small>03</div><div><h3>丁寧なカウンセリングと分かりやすい説明</h3><p>初診時には必ずカウンセリングと口腔内全体の検査を実施。お悩みとご要望を伺ったうえで、お一人おひとりに合わせた治療計画を丁寧にご説明します。</p></div></div>
+      <div class="feature reveal"><div class="feature-num"><small>POINT</small>04</div><div><h3>徹底した滅菌対策で院内感染を防止</h3><p>治療器具はすべて滅菌・消毒。治療中は口腔外バキュームで飛沫や粉塵を吸引し、清潔で安心な治療環境を保っています。</p></div></div>
+      <div class="feature reveal"><div class="feature-num"><small>POINT</small>05</div><div><h3>歯科用CT × 3Dスキャナーの高精度診断</h3><p>骨の量や歯根の向きを立体的に把握できる歯科用CTと、短時間で口腔内を正確に撮影できる3Dスキャナーで、フィット感の高い技工物・矯正装置をお作りします。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">Web Reservation</p>
+      <h2>24時間 Web予約</h2>
+      <p class="sub">3ステップ・1分で完了。空き状況をその場で確認できます。<br>※デモのため実際の予約は登録されません</p>
+    </div>
+    <div class="wizard reveal" id="wizard">
+      <div class="steps">
+        <div class="step active" data-step="1"><span class="n">1</span><span class="lbl">診療内容</span></div>
+        <div class="step-bar"></div>
+        <div class="step" data-step="2"><span class="n">2</span><span class="lbl">日時を選ぶ</span></div>
+        <div class="step-bar"></div>
+        <div class="step" data-step="3"><span class="n">3</span><span class="lbl">お客さま情報</span></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="pane show" id="pane1">
+        <h4>ご来院は初めてですか？</h4>
+        <div class="visit-type" id="visitType">
+          <div class="choice sel" data-v="初診">初めて受診する（初診）</div>
+          <div class="choice" data-v="再診">受診したことがある（再診）</div>
+        </div>
+        <h4>ご希望の診療内容</h4>
+        <div class="choice-grid" id="menuChoice">
+          <div class="choice" data-m="むし歯・歯の痛み">むし歯・歯の痛み</div>
+          <div class="choice" data-m="定期検診・クリーニング">定期検診・クリーニング</div>
+          <div class="choice" data-m="歯周病・歯ぐきの相談">歯周病・歯ぐき</div>
+          <div class="choice" data-m="小児歯科">小児歯科</div>
+          <div class="choice" data-m="ホワイトニング">ホワイトニング</div>
+          <div class="choice" data-m="矯正相談（無料）">矯正相談（無料）</div>
+          <div class="choice" data-m="インプラント相談">インプラント相談</div>
+          <div class="choice" data-m="その他・わからない">その他・わからない</div>
+        </div>
+        <div class="wiz-nav"><span></span><button class="btn btn-primary" id="to2" disabled style="opacity:.5">日時を選ぶ →</button></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="pane" id="pane2">
+        <h4>ご希望日 <span style="font-size:11px;color:var(--ink-soft);font-weight:400">（木・日祝は休診／土曜午後は17:00まで）</span></h4>
+        <div class="date-strip" id="dateStrip"></div>
+        <div class="slot-groups" id="slotArea"><p class="slot-empty">日付を選択してください</p></div>
+        <div class="wiz-nav"><button class="btn btn-ghost" data-back="1">← 戻る</button><button class="btn btn-primary" id="to3" disabled style="opacity:.5">お客さま情報へ →</button></div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="pane" id="pane3">
+        <div class="summary-box">
+          <dl>
+            <dt>診療内容</dt><dd id="sumMenu">—</dd>
+            <dt>日時</dt><dd id="sumWhen">—</dd>
+          </dl>
+        </div>
+        <div class="form-grid">
+          <div class="field" id="fName"><label>お名前<span class="req">必須</span></label><input type="text" id="inName" placeholder="山田 太郎"><p class="err">お名前を入力してください</p></div>
+          <div class="field" id="fTel"><label>お電話番号<span class="req">必須</span></label><input type="tel" id="inTel" placeholder="090-1234-5678"><p class="err">電話番号を正しく入力してください</p></div>
+          <div class="field full"><label>ご要望・症状など（任意）</label><textarea id="inNote" rows="3" placeholder="例）右下の奥歯が冷たいものでしみます"></textarea></div>
+        </div>
+        <div class="wiz-nav"><button class="btn btn-ghost" data-back="2">← 戻る</button><button class="btn btn-primary" id="confirmBtn">この内容で予約する</button></div>
+      </div>
+
+      <!-- DONE -->
+      <div class="pane" id="paneDone">
+        <div class="done-view">
+          <div class="big">🎉</div>
+          <h3>ご予約を受け付けました</h3>
+          <p style="font-size:13px;color:var(--ink-soft)">予約番号</p>
+          <div class="rsv-no" id="rsvNo">OB-XXXX</div>
+          <p id="doneDetail" style="font-size:14px"></p>
+          <p style="font-size:11.5px;color:var(--ink-soft);margin-top:8px">※これはデモ画面です。実際の予約は成立していません。</p>
+          <div class="done-actions">
+            <button class="btn btn-ghost btn-sm" id="icsBtn">📅 カレンダーに追加（.ics）</button>
+            <button class="btn btn-primary btn-sm" id="againBtn">続けて予約する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mybookings" id="myBookings" style="display:none">
+      <h4>MY RESERVATIONS — この端末での予約</h4>
+      <ul id="myList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- DOCTORS -->
+<section id="doctor">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">Doctors</p>
+      <h2>スタッフ紹介</h2>
+    </div>
+    <img class="staff-photo reveal" src="img/oobashika-staff-1024x683.jpg" alt="おおば歯科クリニックのスタッフ">
+    <div class="doctor-grid">
+      <div class="doctor reveal">
+        <img class="avatar-img" src="img/img_doctor01.jpg" alt="院長 大場敏男">
+        <p class="role">DIRECTOR</p>
+        <h3>院長　大場 敏男</h3>
+        <p>「来院された患者さまの口内は、すべて当院で完結できる」——そんな責任を持てる歯科医院でありたいと考えています。その場しのぎではない、根本からの治療をお約束します。</p>
+      </div>
+      <div class="doctor reveal">
+        <img class="avatar-img" src="img/img_doctor02.jpg" alt="医師 大場優">
+        <p class="role">DOCTOR</p>
+        <h3>医師　大場 優</h3>
+        <p>マイクロスコープを用いた精密治療を担当。削る量を最小限に、再発しにくい治療を追求しています。どんな小さな不安もお気軽にご相談ください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLINIC INFO -->
+<section id="clinic" style="background:var(--white);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">Clinic Information</p>
+      <h2>医院情報・アクセス</h2>
+    </div>
+    <div class="info-grid">
+      <div class="hours-card reveal">
+        <h3>🕐 診療時間</h3>
+        <table class="hours" id="hoursTable">
+          <thead><tr><th class="time">診療時間</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th><th>日祝</th></tr></thead>
+          <tbody>
+            <tr><td class="time">9:30〜13:00</td><td class="on">●</td><td class="on">●</td><td class="on">●</td><td class="off">／</td><td class="on">●</td><td class="on">●</td><td class="off">休</td></tr>
+            <tr><td class="time">14:30〜18:00</td><td class="on">●</td><td class="on">●</td><td class="on">●</td><td class="off">／</td><td class="on">●</td><td class="on">▲</td><td class="off">休</td></tr>
+          </tbody>
+        </table>
+        <p class="hours-note">休診日：木曜・日曜・祝日　▲ 土曜午後は 14:30〜17:00</p>
+        <div class="status-chip" style="margin-top:16px" id="openChip2"><span class="status-dot"></span><span id="openTxt2"></span></div>
+      </div>
+      <div class="access-card reveal">
+        <h3>📍 アクセス</h3>
+        <dl>
+          <dt>住所</dt><dd>〒350-0271 埼玉県坂戸市上吉田210-1</dd>
+          <dt>電話</dt><dd><a href="tel:0492817880" style="font-family:var(--en);font-size:16px;color:var(--sage-deep)">049-281-7880</a></dd>
+          <dt>お車</dt><dd>関越自動車道 坂戸西スマートICから国道407号 直進5分</dd>
+          <dt>電車</dt><dd>東武東上線 北坂戸駅 西口徒歩12分</dd>
+        </dl>
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">News</p>
+      <h2>新着情報</h2>
+    </div>
+    <ul class="news-list reveal">
+      <li><time>2026.06.29</time><span class="tag">予防歯科</span><a href="#">当院の予防歯科の取り組み</a></li>
+      <li><time>2026.06.04</time><span class="tag">コラム</span><a href="#">予防歯科とは？</a></li>
+      <li><time>2026.05.03</time><span class="tag">お知らせ</span><a href="#">GWの休診日</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background:var(--white);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="en">FAQ</p>
+      <h2>よくある質問</h2>
+    </div>
+    <div class="faq-list reveal">
+      <details class="faq"><summary><span class="q">Q</span>初診では何を持っていけばいいですか？</summary><div class="a">保険証（またはマイナ保険証）と、お薬手帳をお持ちの方はご持参ください。初診時はカウンセリングと口腔内全体の検査を行いますので、お時間に余裕を持ってお越しください。</div></details>
+      <details class="faq"><summary><span class="q">Q</span>予約なしでも受診できますか？</summary><div class="a">急な痛みなどの場合はまずお電話（049-281-7880）にてご相談ください。予約の方を優先してご案内しているため、Web予約またはお電話でのご予約をおすすめしています。</div></details>
+      <details class="faq"><summary><span class="q">Q</span>クリーニングは保険でできますか？</summary><div class="a">当院は「口腔管理体制強化加算（口管強）」の認定を受けており、お口のクリーニングなどの予防歯科を保険適用で受診いただけるケースがあります。詳しくは受付までお尋ねください。</div></details>
+      <details class="faq"><summary><span class="q">Q</span>マウスピース矯正の相談は無料ですか？</summary><div class="a">はい、矯正の初回カウンセリングは無料で行っております。Web予約の「矯正相談（無料）」からお申し込みください。</div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <b>おおば歯科クリニック</b>
+        <p>〒350-0271 埼玉県坂戸市上吉田210-1<br>TEL 049-281-7880</p>
+        <p style="margin-top:10px;font-size:11px;color:#8a9995">休診日：木曜・日曜・祝日</p>
+      </div>
+      <div>
+        <h4>MENU</h4>
+        <ul>
+          <li><a href="#menu">診療案内</a></li>
+          <li><a href="#features">当院のこだわり</a></li>
+          <li><a href="#doctor">スタッフ紹介</a></li>
+          <li><a href="#clinic">医院情報・アクセス</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>RESERVATION</h4>
+        <ul>
+          <li><a href="#booking">Web予約（24時間）</a></li>
+          <li><a href="tel:0492817880">お電話 049-281-7880</a></li>
+          <li><a href="#faq">よくある質問</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="copyright">このページはデザイン提案用デモです ©︎ Ooba Dental Clinic — Demo Remake</p>
+  </div>
+</footer>
+
+<div class="mobile-bar">
+  <a class="m-tel" href="tel:0492817880">📞 電話する</a>
+  <a class="m-rsv" href="#booking">📅 Web予約</a>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ================= schedule ================= */
+// day: 0=Sun..6=Sat / Thu(4)&Sun(0) closed / Sat PM until 17:00
+const SCHEDULE={1:[["09:30","13:00"],["14:30","18:00"]],2:[["09:30","13:00"],["14:30","18:00"]],3:[["09:30","13:00"],["14:30","18:00"]],5:[["09:30","13:00"],["14:30","18:00"]],6:[["09:30","13:00"],["14:30","17:00"]]};
+const toMin=t=>{const[a,b]=t.split(":").map(Number);return a*60+b};
+
+/* open-now badge */
+function updateOpenChip(){
+  const now=new Date(),ranges=SCHEDULE[now.getDay()],cur=now.getHours()*60+now.getMinutes();
+  let open=false,next="";
+  if(ranges){for(const[s,e]of ranges){if(cur>=toMin(s)&&cur<toMin(e)){open=true;next=`〜${e} まで診療中`;break}if(cur<toMin(s)){next=`本日 ${s} から診療`;break}}}
+  const txt=open?`ただいま診療中（${next}）`:(next?`ただいま診療時間外・${next}`:"本日は休診日です");
+  for(const suf of["","2"]){const chip=document.getElementById("openChip"+suf),t=document.getElementById("openTxt"+suf);if(!chip)continue;chip.classList.toggle("closed",!open);t.textContent=txt}
+}
+updateOpenChip();setInterval(updateOpenChip,60000);
+
+/* ================= booking wizard ================= */
+const state={visit:"初診",menu:null,date:null,time:null};
+const bookings=JSON.parse(localStorage.getItem("ooba-demo-bookings")||"[]");
+const $=id=>document.getElementById(id);
+
+function goStep(n){
+  document.querySelectorAll(".pane").forEach(p=>p.classList.remove("show"));
+  $(n==="done"?"paneDone":"pane"+n).classList.add("show");
+  document.querySelectorAll(".step").forEach(s=>{
+    const k=+s.dataset.step;
+    s.classList.toggle("active",k===n);
+    s.classList.toggle("done",n==="done"||k<n);
+  });
+  $("wizard").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+/* step1 */
+$("visitType").addEventListener("click",e=>{const c=e.target.closest(".choice");if(!c)return;
+  document.querySelectorAll("#visitType .choice").forEach(x=>x.classList.remove("sel"));c.classList.add("sel");state.visit=c.dataset.v});
+$("menuChoice").addEventListener("click",e=>{const c=e.target.closest(".choice");if(!c)return;
+  document.querySelectorAll("#menuChoice .choice").forEach(x=>x.classList.remove("sel"));c.classList.add("sel");state.menu=c.dataset.m;
+  $("to2").disabled=false;$("to2").style.opacity=1});
+$("to2").onclick=()=>{buildDates();goStep(2)};
+
+/* step2 — dates */
+const DOW=["日","月","火","水","木","金","土"];
+function fmtDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function buildDates(){
+  const strip=$("dateStrip");strip.innerHTML="";
+  for(let i=1;i<=21;i++){
+    const d=new Date();d.setDate(d.getDate()+i);
+    const dow=d.getDay(),off=!SCHEDULE[dow];
+    const cell=document.createElement("div");
+    cell.className="date-cell"+(off?" off":"")+(dow===6?" sat":dow===0?" sun":"");
+    cell.innerHTML=`<div class="dow">${DOW[dow]}</div><div class="dd">${d.getDate()}</div><div class="mm">${d.getMonth()+1}月</div>`;
+    if(!off)cell.onclick=()=>{document.querySelectorAll(".date-cell").forEach(x=>x.classList.remove("sel"));cell.classList.add("sel");state.date=fmtDate(d);state.time=null;refreshNext();buildSlots(d)};
+    strip.appendChild(cell);
+  }
+}
+/* deterministic pseudo-availability */
+function hash(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
+function isFree(dateStr,t){
+  if(bookings.some(b=>b.date===dateStr&&b.time===t))return false;
+  return hash(dateStr+t)%10>2; // ~70% free
+}
+function buildSlots(d){
+  const area=$("slotArea");area.innerHTML="";
+  const ranges=SCHEDULE[d.getDay()],labels=["午前","午後"];
+  ranges.forEach((r,i)=>{
+    const lbl=document.createElement("p");lbl.className="slot-label";lbl.textContent=`${labels[i]}（${r[0]}〜${r[1]}）`;area.appendChild(lbl);
+    const grid=document.createElement("div");grid.className="slots";
+    for(let m=toMin(r[0]);m<=toMin(r[1])-30;m+=30){
+      const t=`${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
+      const s=document.createElement("div");s.textContent=t;
+      const free=isFree(state.date,t);
+      s.className="slot"+(free?"":" full");
+      if(free)s.onclick=()=>{document.querySelectorAll(".slot").forEach(x=>x.classList.remove("sel"));s.classList.add("sel");state.time=t;refreshNext()};
+      grid.appendChild(s);
+    }
+    area.appendChild(grid);
+  });
+}
+function refreshNext(){const ok=state.date&&state.time;$("to3").disabled=!ok;$("to3").style.opacity=ok?1:.5}
+$("to3").onclick=()=>{
+  const d=new Date(state.date+"T00:00:00");
+  $("sumMenu").textContent=`${state.menu}（${state.visit}）`;
+  $("sumWhen").textContent=`${d.getMonth()+1}月${d.getDate()}日（${DOW[d.getDay()]}） ${state.time}〜`;
+  goStep(3);
+};
+document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>goStep(+b.dataset.back));
+
+/* step3 — confirm */
+$("confirmBtn").onclick=()=>{
+  const name=$("inName").value.trim(),tel=$("inTel").value.trim();
+  let ok=true;
+  $("fName").classList.toggle("invalid",!name);if(!name)ok=false;
+  const telOk=/^[\d\-+() ]{10,}$/.test(tel);
+  $("fTel").classList.toggle("invalid",!telOk);if(!telOk)ok=false;
+  if(!ok)return;
+  const no="OB-"+Date.now().toString(36).slice(-5).toUpperCase();
+  const rec={no,date:state.date,time:state.time,menu:state.menu,visit:state.visit,name,tel,note:$("inNote").value.trim()};
+  bookings.push(rec);localStorage.setItem("ooba-demo-bookings",JSON.stringify(bookings));
+  $("rsvNo").textContent=no;
+  const d=new Date(state.date+"T00:00:00");
+  $("doneDetail").textContent=`${name} さま／${d.getMonth()+1}月${d.getDate()}日（${DOW[d.getDay()]}） ${state.time}〜／${state.menu}`;
+  $("icsBtn").onclick=()=>downloadIcs(rec);
+  renderMy();goStep("done");
+};
+$("againBtn").onclick=()=>{state.date=state.time=null;refreshNext();goStep(1)};
+
+/* ics */
+function downloadIcs(r){
+  const dt=r.date.replace(/-/g,"")+"T"+r.time.replace(":","")+"00";
+  const end=new Date(r.date+"T"+r.time+":00");end.setMinutes(end.getMinutes()+30);
+  const dtEnd=fmtDate(end).replace(/-/g,"")+"T"+String(end.getHours()).padStart(2,"0")+String(end.getMinutes()).padStart(2,"0")+"00";
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//ooba-demo//JP","BEGIN:VEVENT",`UID:${r.no}@ooba-demo`,`DTSTART:${dt}`,`DTEND:${dtEnd}`,`SUMMARY:【デモ】おおば歯科クリニック ${r.menu}`,"LOCATION:埼玉県坂戸市上吉田210-1","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));a.download=`${r.no}.ics`;a.click();
+}
+
+/* my bookings */
+function renderMy(){
+  const box=$("myBookings"),list=$("myList");
+  if(!bookings.length){box.style.display="none";return}
+  box.style.display="block";list.innerHTML="";
+  bookings.forEach((b,i)=>{
+    const d=new Date(b.date+"T00:00:00");
+    const li=document.createElement("li");
+    li.innerHTML=`<span>${b.no}　${d.getMonth()+1}/${d.getDate()}（${DOW[d.getDay()]}） ${b.time}〜　${b.menu}</span>`;
+    const btn=document.createElement("button");btn.className="cancel";btn.textContent="キャンセル";
+    btn.onclick=()=>{bookings.splice(i,1);localStorage.setItem("ooba-demo-bookings",JSON.stringify(bookings));renderMy()};
+    li.appendChild(btn);list.appendChild(li);
+  });
+}
+renderMy();
+
+/* ================= map ================= */
+const map=L.map("map",{scrollWheelZoom:false}).setView([35.9776,139.3745],15);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors"}).addTo(map);
+L.marker([35.9776,139.3745]).addTo(map).bindPopup("<b>おおば歯科クリニック</b><br>坂戸市上吉田210-1（位置は概略）").openPopup();
+
+/* ================= reveal ================= */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
