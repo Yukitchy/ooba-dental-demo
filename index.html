@@ -27,7 +27,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.9;font-size:15px;letter-spacing:.02em}
+body{font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.9;font-size:15px;letter-spacing:.02em;overflow-x:clip}
 img{max-width:100%}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
@@ -197,7 +197,8 @@ section{padding:88px 0}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
 .hours-card,.access-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px}
 .hours-card h3,.access-card h3{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-table.hours{width:100%;border-collapse:collapse;font-size:13px;text-align:center}
+.hours-scroll{overflow-x:auto}
+table.hours{width:100%;min-width:430px;border-collapse:collapse;font-size:13px;text-align:center}
 table.hours th,table.hours td{border:1px solid var(--line);padding:9px 4px}
 table.hours thead th{background:var(--sage-pale);font-weight:600;font-size:12.5px}
 table.hours .time{font-family:var(--en);font-size:13.5px;white-space:nowrap}
@@ -498,13 +499,13 @@ footer{background:var(--ink);color:#cfd8d5;padding:60px 0 90px;font-size:13px}
     <div class="info-grid">
       <div class="hours-card reveal">
         <h3>🕐 診療時間</h3>
-        <table class="hours" id="hoursTable">
+        <div class="hours-scroll"><table class="hours" id="hoursTable">
           <thead><tr><th class="time">診療時間</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th><th>日祝</th></tr></thead>
           <tbody>
             <tr><td class="time">9:30〜13:00</td><td class="on">●</td><td class="on">●</td><td class="on">●</td><td class="off">／</td><td class="on">●</td><td class="on">●</td><td class="off">休</td></tr>
             <tr><td class="time">14:30〜18:00</td><td class="on">●</td><td class="on">●</td><td class="on">●</td><td class="off">／</td><td class="on">●</td><td class="on">▲</td><td class="off">休</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="hours-note">休診日：木曜・日曜・祝日　▲ 土曜午後は 14:30〜17:00</p>
         <div class="status-chip" style="margin-top:16px" id="openChip2"><span class="status-dot"></span><span id="openTxt2"></span></div>
       </div>
